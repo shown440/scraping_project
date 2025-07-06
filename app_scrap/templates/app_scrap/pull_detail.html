@@ -1,0 +1,298 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>CIA Data Pull Details</h1>
+<h2>Pull Time: {{ data_pull.pull_time|date:"Y-m-d H:i" }}</h2>
+
+<div class="change-summary">
+    <div class="summary-box added">
+        <h3>Added</h3>
+        <p>{{ added_count }}</p>
+    </div>
+    <div class="summary-box removed">
+        <h3>Removed</h3>
+        <p>{{ removed_count }}</p>
+    </div>
+    <div class="summary-box modified">
+        <h3>Modified</h3>
+        <p>{{ modified_count }}</p>
+    </div>
+    <div class="summary-box total">
+        <h3>Total Changes</h3>
+        {% comment %} <p>{{ changes|length }}</p> {% endcomment %}
+        <p>{{ changes.paginator.count }}</p>
+    </div>
+</div>
+
+<div class="change-details">
+    <h3>Change Details</h3>
+    
+    {% if changes %}
+    <div class="change-filters">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="added">Added</button>
+        <button class="filter-btn" data-filter="removed">Removed</button>
+        <button class="filter-btn" data-filter="modified">Modified</button>
+    </div>
+    
+    <table class="changes-table">
+        <thead>
+            <tr>
+                <th>Type</th>
+                <th>Provider</th>
+                <th>Details</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for change in changes %}
+            <tr class="change-row change-{{ change.change_type }}">
+                <td>
+                    <span class="change-badge {{ change.change_type }}">
+                        {{ change.get_change_type_display }}
+                    </span>
+                </td>
+                <td>{{ change.provider }}</td>
+                <td>
+                    {% if change.change_type == 'added' %}
+                        <strong>New Data:</strong><br>
+                        City: {{ change.current_data.city }}<br>
+                        State: {{ change.current_data.state }}<br>
+                        Effective: {{ change.current_data.effective }}<br>
+                        {% if change.current_data.press_release %}
+                            Press Release: <a href="{{ change.current_data.press_release }}" target="_blank">Link</a>
+                        {% endif %}
+                    
+                    {% elif change.change_type == 'removed' %}
+                        <strong>Removed Data:</strong><br>
+                        City: {{ change.previous_data.city }}<br>
+                        State: {{ change.previous_data.state }}<br>
+                        Effective: {{ change.previous_data.effective }}<br>
+                        {% if change.previous_data.press_release %}
+                            Press Release: <a href="{{ change.previous_data.press_release }}" target="_blank">Link</a>
+                        {% endif %}
+                    
+                    {% elif change.change_type == 'modified' %}
+                        <div class="change-comparison">
+                            <div class="change-old">
+                                <strong>Previous:</strong><br>
+                                City: {{ change.previous_data.city }}<br>
+                                State: {{ change.previous_data.state }}<br>
+                                Effective: {{ change.previous_data.effective }}<br>
+                                {% if change.previous_data.press_release %}
+                                    Press Release: <a href="{{ change.previous_data.press_release }}" target="_blank">Link</a>
+                                {% endif %}
+                            </div>
+                            <div class="change-new">
+                                <strong>Current:</strong><br>
+                                City: {{ change.current_data.city }}<br>
+                                State: {{ change.current_data.state }}<br>
+                                Effective: {{ change.current_data.effective }}<br>
+                                {% if change.current_data.press_release %}
+                                    Press Release: <a href="{{ change.current_data.press_release }}" target="_blank">Link</a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="no-changes">
+        <p>No changes detected in this data pull.</p>
+    </div>
+    {% endif %}
+    
+    {% if changes.paginator.num_pages > 1 %}
+    <div class="pagination">
+        <span class="step-links">
+            {% if changes.has_previous %}
+                <a href="?page=1">&laquo; first</a>
+                <a href="?page={{ changes.previous_page_number }}">previous</a>
+            {% endif %}
+
+            <span class="current">
+                Page {{ changes.number }} of {{ changes.paginator.num_pages }}
+            </span>
+
+            {% if changes.has_next %}
+                <a href="?page={{ changes.next_page_number }}">next</a>
+                <a href="?page={{ changes.paginator.num_pages }}">last &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
+    {% endif %}
+</div>
+
+<a href="{% url 'change_history' %}" class="btn back-btn">
+    &larr; Back to History
+</a>
+
+<style>
+    .pagination {
+        margin-top: 20px;
+        text-align: center;
+    }
+
+    .pagination a {
+        color: #007bff;
+        padding: 8px 16px;
+        text-decoration: none;
+        border: 1px solid #ddd;
+        margin: 0 4px;
+    }
+
+    .pagination a.active {
+        background-color: #007bff;
+        color: white;
+        border: 1px solid #007bff;
+    }
+
+    .pagination a:hover:not(.active) {
+        background-color: #ddd;
+    }
+
+
+
+    .change-summary {
+        display: flex;
+        justify-content: space-between;
+        margin: 20px 0;
+    }
+    
+    .summary-box {
+        flex: 1;
+        padding: 15px;
+        text-align: center;
+        border-radius: 8px;
+        margin: 0 10px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    
+    .summary-box h3 {
+        margin-top: 0;
+        font-size: 1.1em;
+    }
+    
+    .summary-box p {
+        font-size: 1.8em;
+        font-weight: bold;
+        margin: 10px 0;
+    }
+    
+    .added { background-color: #d4edda; color: #155724; }
+    .removed { background-color: #f8d7da; color: #721c24; }
+    .modified { background-color: #fff3cd; color: #856404; }
+    .total { background-color: #d1ecf1; color: #0c5460; }
+    
+    .change-filters {
+        margin: 20px 0;
+    }
+    
+    .filter-btn {
+        padding: 8px 15px;
+        margin-right: 10px;
+        background-color: #e9ecef;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+    
+    .filter-btn.active {
+        background-color: #007bff;
+        color: white;
+    }
+    
+    .changes-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    
+    .changes-table th, .changes-table td {
+        padding: 12px;
+        border-bottom: 1px solid #ddd;
+        text-align: left;
+    }
+    
+    .changes-table th {
+        background-color: #f2f2f2;
+    }
+    
+    .change-badge {
+        display: inline-block;
+        padding: 4px 8px;
+        border-radius: 12px;
+        font-size: 0.8em;
+        font-weight: bold;
+    }
+    
+    .change-badge.added { background-color: #d4edda; color: #155724; }
+    .change-badge.removed { background-color: #f8d7da; color: #721c24; }
+    .change-badge.modified { background-color: #fff3cd; color: #856404; }
+    
+    .change-comparison {
+        display: flex;
+    }
+    
+    .change-old, .change-new {
+        flex: 1;
+        padding: 10px;
+    }
+    
+    .change-old {
+        background-color: #f8f9fa;
+        border-right: 1px solid #dee2e6;
+    }
+    
+    .change-new {
+        background-color: #f8f9fa;
+    }
+    
+    .back-btn {
+        display: inline-block;
+        margin-top: 20px;
+        padding: 8px 16px;
+        background-color: #6c757d;
+        color: white;
+        text-decoration: none;
+        border-radius: 4px;
+    }
+    
+    .back-btn:hover {
+        background-color: #5a6268;
+    }
+</style>
+
+<script>
+    // Add filtering functionality
+    document.addEventListener('DOMContentLoaded', function() {
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        const changeRows = document.querySelectorAll('.change-row');
+        const urlParams = new URLSearchParams(window.location.search);
+        const activeFilter = urlParams.get('filter') || 'all';
+
+        // Activate current filter button
+        filterButtons.forEach(button => {
+            if (button.dataset.filter === activeFilter) {
+                button.classList.add('active');
+            }
+            
+            button.addEventListener('click', function() {
+                const filter = this.dataset.filter;
+                urlParams.set('filter', filter);
+                window.location.search = urlParams.toString();
+            });
+        });
+
+        // Apply filter on page load
+        changeRows.forEach(row => {
+            if (activeFilter === 'all' || row.classList.contains(`change-${activeFilter}`)) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    });
+</script>
+{% endblock %}

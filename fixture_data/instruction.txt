@@ -1,0 +1,28 @@
+#############################################
+### django fixtures 
+#############################################
+
+#############################################
+### backup data from DB
+#############################################
+# Dump specific table data
+python3.12 manage.py dumpdata app_auth.Status --indent 4 > fixture_data/app_auth/1_user_status.json
+python3.12 manage.py dumpdata app_auth.Role --indent 4 > fixture_data/app_auth/2_user_role.json
+
+#############################################
+### push data into DB
+#############################################
+python3.12 manage.py loaddata fixture_data/app_auth/1_user_status.json
+python3.12 manage.py loaddata fixture_data/app_auth/2_user_role.json
+
+
+#############################################
+### push all data into DB
+#############################################
+python3.12 manage.py loaddata fixture_data/app_auth/*.json
+
+
+
+
+
+

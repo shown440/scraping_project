@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+  <h2>Sign in</h2>
+  {% if messages %}
+    {% for msg in messages %}
+      <div class="alert">{{ msg }}</div>
+    {% endfor %}
+  {% endif %}
+  <form method="post">
+    {% csrf_token %}
+    <div>
+      <label for="id_email">Email:</label><br>
+      <input type="email" name="email" id="id_email" required autofocus>
+    </div>
+    <div>
+      <label for="id_password">Password:</label><br>
+      <input type="password" name="password" id="id_password" required>
+    </div>
+    <button type="submit">Log in</button>
+  </form>
+  </form>
+{% endblock %}

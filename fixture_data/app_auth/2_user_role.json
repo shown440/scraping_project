@@ -1,0 +1,23 @@
+[
+{
+    "model": "app_auth.role",
+    "pk": 1,
+    "fields": {
+        "name": "SUPER ADMIN"
+    }
+},
+{
+    "model": "app_auth.role",
+    "pk": 2,
+    "fields": {
+        "name": "COUNTRY ADMIN"
+    }
+},
+{
+    "model": "app_auth.role",
+    "pk": 3,
+    "fields": {
+        "name": "USER"
+    }
+}
+]

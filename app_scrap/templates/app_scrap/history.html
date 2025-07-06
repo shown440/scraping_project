@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>CIA Data Change History</h1>
+
+{% if pulls %}
+    <div class="table-container">
+        <table class="pulls-table">
+            <thead>
+                <tr>
+                    <th>Pull Time</th>
+                    <th>Total Changes</th>
+                    <th>Added</th>
+                    <th>Removed</th>
+                    <th>Modified</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for pull in pulls %}
+                <tr>
+                    <td>{{ pull.pull_time|date:"Y-m-d H:i e" }}</td>
+                    <td>{{ pull.total_changes }}</td>
+                    <td>{{ pull.added_count }}</td>
+                    <td>{{ pull.removed_count }}</td>
+                    <td>{{ pull.modified_count }}</td>
+                    <td>
+                        <a href="{% url 'pull_detail' pull.id %}" class="btn">
+                            View Details
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="pagination">
+        <span class="step-links">
+            {% if pulls.has_previous %}
+                <a href="?page=1">&laquo; first</a>
+                <a href="?page={{ pulls.previous_page_number }}">previous</a>
+            {% endif %}
+            
+            <span class="current">
+                Page {{ pulls.number }} of {{ pulls.paginator.num_pages }}
+            </span>
+            
+            {% if pulls.has_next %}
+                <a href="?page={{ pulls.next_page_number }}">next</a>
+                <a href="?page={{ pulls.paginator.num_pages }}">last &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
+{% else %}
+    <div class="no-data">
+        <p>No data pulls available yet.</p>
+        <a href="{% url 'change_dashboard' %}" class="btn">
+            Check Dashboard
+        </a>
+    </div>
+{% endif %}
+
+<style>
+    .table-container {
+        overflow-x: auto;
+    }
+    
+    .pulls-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        min-width: 600px;
+    }
+    
+    /*.pulls-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+    }*/
+    
+    .pulls-table th, .pulls-table td {
+        padding: 10px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+    
+    .pulls-table th {
+        background-color: #f2f2f2;
+    }
+    
+    .pulls-table tr:hover {
+        background-color: #f5f5f5;
+    }
+    
+    .btn {
+        display: inline-block;
+        padding: 6px 12px;
+        background-color: #007bff;
+        color: white;
+        text-decoration: none;
+        border-radius: 4px;
+    }
+    
+    .btn:hover {
+        background-color: #0056b3;
+    }
+    
+    .pagination {
+        margin-top: 20px;
+    }
+    
+    .pagination a {
+        margin: 0 5px;
+        text-decoration: none;
+    }
+    
+    .no-data {
+        text-align: center;
+        padding: 40px;
+        font-size: 1.2em;
+    }
+</style>
+{% endblock %}

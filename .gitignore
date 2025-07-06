@@ -1,0 +1,42 @@
+# [python file]
+settings_local.py
+
+# [json file]
+# env.json 
+
+# [db file]
+# bhutan_adss_db.sql 
+
+# [media files]
+media/
+media.zip
+/media/
+data/
+/data/
+static/
+/static/  
+staticfiles/
+/staticfiles/
+
+# [For migration files except __init__.py]
+# _migrations/*
+# !_migrations/__init__.py
+
+# **/migrations/**
+# !**/migrations
+# !**/migrations/__init__.py
+
+# [python cache]
+__pycache__/
+*.pyc
+
+# [notebook]
+.ipynb_checkpoints
+
+# [vscode]
+.vscode
+
+# [pytest]
+.pytest_*
+.idea
+.DS_Store

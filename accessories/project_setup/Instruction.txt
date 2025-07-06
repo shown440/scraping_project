@@ -1,0 +1,24 @@
+########################################
+### 1. Setup Environment
+########################################
+1. create env: python3.12 -m venv sebpo_scrap_env_312 
+2. actiavte env: source /Users/shaif/Project_Environments/python_environments/sebpo_scrap_env_312/bin/activate
+
+
+########################################
+### 2. Setup and Run Project
+########################################
+1. create project: django-admin startproject scraping_project
+2. create auth app: python manage.py startapp app_auth
+3. create auth app: python manage.py startapp app_scrap
+
+4. apply makemigrations: python3.12 manage.py makemigrations
+5. apply migrate: python3.12 manage.py migrate
+6. create auth super user: python3.12 manage.py createsuperuser
+7. create auth super user: python3.12 manage.py collectstatic
+8. create auth super user: python3.12 manage.py runserver
+9. create auth super user: python3.12 manage.py fetch_cia_data
+
+
+
+

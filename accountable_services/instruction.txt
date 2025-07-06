@@ -1,0 +1,54 @@
+
+
+"""
+    #############################################################
+    ### Application Service
+    #############################################################
+"""
+Steps Django Application(gunicorn) Services:
+1. Go to "/etc/systemd/system/"
+2. Create service here...
+3. Create the service. My service name is: "sesame-api.service" 
+4. Create Command: sudo nano sesame-api.service 
+
+
+
+"""
+    #############################################################
+    ### Load Balancer Service
+    #############################################################
+"""
+Steps System(Load balancer - nginx) Services:
+1. Go to "/etc/nginx/sites-available/" 
+2. create service both path...
+3. Create the service. My service name is: "sesame-ng"
+4. Create Command: sudo nano sesame-ng 
+
+
+
+"""
+    #############################################################
+    ### Celery Worker Service
+    #############################################################
+"""
+Steps Django Application(gunicorn) Services:
+1. Go to "/etc/systemd/system/"
+2. Create service here...
+3. Create the service. My service name is: "sesame_celery_worker.service" 
+4. Create Command: sudo nano sesame_celery_worker.service 
+
+
+
+"""
+    #############################################################
+    ### Celery Beat Service
+    #############################################################
+"""
+Steps Django Application(gunicorn) Services:
+1. Go to "/etc/systemd/system/"
+2. Create service here...
+3. Create the service. My service name is: "sesame_celery_beat.service" 
+4. Create Command: sudo nano sesame_celery_beat.service 
+
+
+

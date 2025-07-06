@@ -1,0 +1,22 @@
+[Unit]
+Description=scraping-project-gunicorn-daemon
+After=network.target
+
+[Service]
+User=root
+Group=root
+WorkingDirectory=/var/www/prod/scraping_project/
+
+# Use the gunicorn from your virtual environment
+ExecStart=/var/www/Project_Environments/python_environments/sebpo_scrap_env_312/bin/gunicorn \
+    --log-level debug \
+    --access-logfile /var/log/scrap_webservice_guni_access.log \
+    --error-logfile /var/log/scrap_webservice_guni_access.log \
+    --workers 4 \
+    --timeout 600 \
+    --bind 0.0.0.0:8008 scraping_project.wsgi:application
+
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,23 @@
+[
+{
+    "model": "app_auth.status",
+    "pk": 1,
+    "fields": {
+        "name": "Approved"
+    }
+},
+{
+    "model": "app_auth.status",
+    "pk": 2,
+    "fields": {
+        "name": "Pending"
+    }
+},
+{
+    "model": "app_auth.status",
+    "pk": 3,
+    "fields": {
+        "name": "Rejected"
+    }
+}
+]

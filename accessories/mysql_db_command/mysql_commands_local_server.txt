@@ -1,0 +1,56 @@
+#######################################################
+### INSTALL MySQL
+#######################################################
+sudo apt update
+sudo apt install mysql-server
+
+sudo systemctl start mysql
+sudo systemctl enable mysql
+
+sudo mysql_secure_installation
+
+sudo systemctl status mysql 
+sudo systemctl restart mysql 
+
+
+
+#######################################################
+### create database user and alter password in POSTGRES
+#######################################################
+sudo mysql -u root -p
+
+CREATE DATABASE sebpo_scrap_db; 
+
+SHOW DATABASES;
+
+CREATE USER 'ffwc'@'localhost' IDENTIFIED BY 'password@1234'; 
+GRANT ALL PRIVILEGES ON sebpo_scrap_db.* TO 'ffwc'@'localhost';
+FLUSH PRIVILEGES;
+
+exit;
+
+
+######################################################################################################################
+######################################################################################################################
+### will write these command later
+######################################################################################################################
+######################################################################################################################
+GRANT ALL PRIVILEGES ON DATABASE sebpo_scrap_db TO ffwc;
+ALTER ROLE ffwc WITH SUPERUSER;        # make a user to superuser
+
+
+#######################################################
+### DUMP MySQL DATABASE
+#######################################################
+command: mysqldump -u database_user_name -p db_name > directory_where_want_to_save
+example: mysqldump -u ffwc -p ffwc_new > sebpo_scrap_db.sql
+example: mysqldump -u root -p ffwc_new > sebpo_scrap_db.sql
+
+
+#######################################################
+### RESTORE MySQL DATABASE
+#######################################################
+mysql -u ffwc -p sebpo_scrap_db < sebpo_scrap_db.sql
+
+
+

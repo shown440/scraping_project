@@ -1,0 +1,8 @@
+Reload All Service: sudo systemctl daemon-reload
+
+1. Create Command: sudo nano sesame_celery_beat.service
+2. Enable Command: sudo systemctl enable celery_beat
+3. Start Command: sudo systemctl start celery_beat
+4. Restart Command: sudo systemctl restart celery_beat
+5. Monitoring Command: sudo systemctl status celery_beat
+6. Issue checking Command: sudo journalctl -u celery_beat 

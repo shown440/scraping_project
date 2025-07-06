@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}My Scrap App{% endblock %}</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="d-flex flex-column min-vh-100">
+    <!-- Navigation Bar -->
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
+            <div class="container">
+                <a class="navbar-brand fw-bold" href="/">
+                    <i class="fas fa-recycle me-2"></i>My Scrap App
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <div class="ms-auto d-flex">
+                        {% if user.is_authenticated %}
+                        <div class="d-flex align-items-center text-light me-3">
+                            <i class="fas fa-user-circle me-2"></i>Welcome, {{ user.username }}
+                        </div>
+                        {% endif %}
+                        <ul class="navbar-nav">
+                            {% if not user.is_authenticated %}
+                            <li class="nav-item">
+                                <a class="nav-link btn btn-outline-light" href="{% url 'login' %}">
+                                    <i class="fas fa-sign-in-alt me-1"></i> Login
+                                </a>
+                            </li>
+                            {% else %}
+                            <li class="nav-item">
+                                <a class="nav-link btn btn-outline-light" href="{% url 'change_dashboard' %}">
+                                    <i class="fas me-1"></i> Dashboard
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link btn btn-outline-light" href="{% url 'change_history' %}">
+                                    <i class="fas me-1"></i> History
+                                </a>
+                            </li>
+                            {% comment %} <li class="nav-item">
+                                <a class="nav-link btn btn-outline-light" href="{% url 'change_history' %}"> 
+                                    <i class="fas me-1"></i> Pull Detail
+                                </a>
+                            </li> {% endcomment %}
+                            <li class="nav-item">
+                                <a class="nav-link btn btn-outline-light" href="{% url 'logout' %}">
+                                    <i class="fas fa-sign-out-alt me-1"></i> Logout
+                                </a>
+                            </li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow-1 py-4">
+        <div class="container my-4">
+            {% block content %}
+            <!-- Default content goes here if a child template doesn't override -->
+            <div class="text-center py-5 bg-light rounded-3 shadow-sm">
+                <h1 class="display-4 text-primary">Welcome to My Scrap App</h1>
+                <p class="lead">Start by creating your own content pages</p>
+            </div>
+            {% endblock %}
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-4 mt-auto">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <p class="mb-0">&copy; {{ now.year }} My Scrap App. All rights reserved.</p>
+                </div>
+                <div class="col-md-6 text-md-end mt-3 mt-md-0">
+                    <div class="d-inline-flex">
+                        <a href="#" class="text-white me-3 fs-5"><i class="fab fa-facebook"></i></a>
+                        <a href="#" class="text-white me-3 fs-5"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-white me-3 fs-5"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-white fs-5"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
