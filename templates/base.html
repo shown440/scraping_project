@@ -46,15 +46,15 @@
                                 </a>
                             </li>
                             <li class="nav-item">
+                                <a class="nav-link btn btn-outline-light" href="{% url 'cia_data_list' %}"> 
+                                    <i class="fas me-1"></i> CIA Latest Data
+                                </a>
+                            </li>
+                            <li class="nav-item">
                                 <a class="nav-link btn btn-outline-light" href="{% url 'change_history' %}">
                                     <i class="fas me-1"></i> History
                                 </a>
                             </li>
-                            {% comment %} <li class="nav-item">
-                                <a class="nav-link btn btn-outline-light" href="{% url 'change_history' %}"> 
-                                    <i class="fas me-1"></i> Pull Detail
-                                </a>
-                            </li> {% endcomment %}
                             <li class="nav-item">
                                 <a class="nav-link btn btn-outline-light" href="{% url 'logout' %}">
                                     <i class="fas fa-sign-out-alt me-1"></i> Logout

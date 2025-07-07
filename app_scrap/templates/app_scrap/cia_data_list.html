@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Latest Data Pull</h1>
+
+{% if latest_pull %}
+<p>Pull Time: {{ latest_pull.pull_time|date:"Y-m-d H:i" }}</p>
+<hr>
+
+<h2>Records ({{ page_obj.paginator.count }})</h2>
+<table class="table">
+    <thead>
+    <tr>
+        <th>Provider</th>
+        <th>City</th>
+        <th>State</th>
+        <th>Effective Date</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for record in page_obj %}
+        <tr>
+        <td>{{ record.provider }}</td>
+        <td>{{ record.city }}</td>
+        <td>{{ record.state }}</td>
+        <td>{{ record.effective }}</td>
+        </tr>
+    {% empty %}
+        <tr>
+        <td colspan="4">No records found</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<!-- Pagination -->
+<div class="pagination">
+    <span class="step-links">
+    {% if page_obj.has_previous %}
+        <a href="?page=1">&laquo; first</a>
+        <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+    {% endif %}
+    
+    <span class="current">
+        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+    </span>
+    
+    {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}">next</a>
+        <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+    {% endif %}
+    </span>
+</div>
+
+{% else %}
+<p>No data pulls available</p>
+{% endif %}
+{% endblock %}

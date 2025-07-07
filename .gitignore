@@ -1,11 +1,11 @@
 # [python file]
-settings_local.py
+# settings_local.py
 
 # [json file]
 # env.json 
 
 # [db file]
-# bhutan_adss_db.sql 
+# sebpo_scrap_db.sql 
 
 # [media files]
 media/
