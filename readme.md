@@ -136,11 +136,139 @@ And paste updated command inside here from: ../scraping\_project/accountable\_se
    1. sudo systemctl restart nginx
 
 -----
-## <a name="contributing"></a>Contributing
+## <a name="contributing"></a>Explanations of features:
+1. **How the scraper works?:** 
+
+   The scraper fetches CIA agreement data from the OIG website in three key steps:
+
+1. **Data Extraction**
+   1. Iterates through A-Z pages to scrape provider records
+   1. Parses HTML tables using BeautifulSoup
+   1. Captures provider names, locations, effective dates, and document links
+1. **Change Detection**
+   1. Generates SHA-256 hashes for each record
+   1. Compares hashes with previous database pull
+   1. Identifies added/removed records since last run
+1. **Database Operations**
+   1. Creates new DataPull entry for each execution
+   1. Stores raw data in CIAData table
+   1. Logs changes in DataChange table (additions/removals)
+   1. Marks pull as processed after completion
+
+The process tracks data evolution by comparing cryptographic hashes between runs, efficiently detecting changes without storing full historical datasets.
+
+
+1. **How the refresh button works?:**   
+   1. User Click:
+- Clicking the "Refresh Data" button triggers a JavaScript event.
+  1. Background Process Start:
+- The button hides, and a "Processing..." spinner appears.
+- A request is sent to Django's start\_processing URL.
+- Django launches a background thread to scrape/process CIA data without blocking the user.
+  1. Data Processing:
+     1. Scrapes the latest CIA data from the OIG website.
+     1. Compares new data with the previous pull to detect additions/removals.
+     1. Logs changes in the database (DataChange model).
+
+1. Auto-Refresh on Completion:
+   1. JavaScript checks the dashboard every 3 seconds.
+   1. When the "Latest Pull" timestamp updates, the page reloads automatically.
+   1. The UI displays new changes (added/removed records).
+
+1. Key Flow:
+
+Click → Hide Button → Start Thread → Scrape → Compare → Save Changes → Detect Update → Reload Page
+
+1. **How differences are displayed?:**   
+
+   The differences are displayed in a **categorized, side-by-side format** based on change type:
+
+1. **Added Items**:
+   Added: [New Data]
+   *(Shows only the new state)*
+1. **Removed Items**:
+   Removed: [Old Data]
+   *(Shows only the previous state)*
+1. **Modified Items**:
+   Changed from: [Old Data] to [New Data]
+   *(Directly compares previous → current values)*
+
+Key features:
+
+- Color-coded change types (visual distinction)
+- Raw HTML rendering (|safe filter preserves formatting)
+- Tabular layout with provider context
+- Summary statistics at top (added/removed/modified counts)
+
+1. **How latest data are displayed?:**   
+
+Here's a concise explanation of how the latest data is displayed:
+
+1. **Latest Data Pull**: The most recent DataPull entry is fetched from the database.
+1. **Time Conversion**: The pull time is converted to GMT+6 and displayed in YYYY-MM-DD HH:MM format.
+1. **Paginated Records**: Associated records from CIAData are displayed in a table with 25 entries per page.
+1. **Table Structure**: Each row shows:
+   1. Provider
+   1. City
+   1. State
+   1. Effective Date
+1. **Pagination Controls**: Users can navigate between pages using first/previous/next/last links.
+1. **Fallback Handling**: Shows "No records found" if data is empty or "No data pulls available" if no pull exists.
+
+Output is always timezone-adjusted and paginated for clarity.
+
+1. **How authentication is enforced?:**   
+
+   Authentication is enforced by applying the @login\_required **decorator** to every view function. This:
+
+   1. **Restricts access** to authenticated users only.
+   1. **Redirects unauthenticated users** to Django's default login page (handled internally).
+   1. **Uses Django's built-in session-based authentication** system (no custom logic needed).
+   1. **Result:** All routes (e.g., /dashboard, /history) are automatically protected. Unauthenticated requests get redirected to login.
+
+**(Implementation: Decorators wrap each view, checking request.user.is\_authenticated behind the scenes.)**
+
+1. **How to set up scheduled scraping?:**   
+   1. Customize Paths
+
+Edit fetch\_cia\_data.sh:
+
+1. Replace /var/www/prod/scraping\_project with your project path.
+1. Replace /var/www/Project\_Environments/... with your Python environment path.
+
+1. Grant Script Permissions
+
+Run:
+
+1. sudo chmod 777 /path/to/fetch\_cia\_data.sh
+1. Schedule in Cron
+
+Execute:
+
+1. sudo crontab -e
+
+Add this line (runs daily at 15:20 or 3:20 pm):
+
+1. 20 15 \* \* \* /path/to/fetch\_cia\_data.sh
+
+Save and exit.
+
+1. Schedule Syntax: 20 15 \* \* \*
+   1. 20 → Minute 20 (of the hour)
+   1. 15 → Hour 15 (3 PM in 24-hour time)
+   1. \* → Every day of the month
+   1. \* → Every month
+   1. \* → Every day of the week (Monday-Sunday)
+
+
+
+-----
+## <a name="license"></a>Contributing
 1. Fork the repository
 1. Create a feature branch (git checkout -b feature/XYZ)
 1. Commit your changes (git commit -m "Add XYZ feature")
 1. Push to the branch (git push origin feature/XYZ)
 1. Open a Pull Request
 -----
+
 

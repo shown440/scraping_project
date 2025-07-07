@@ -16,10 +16,8 @@ from app_scrap.models import DataChange, DataPull, CIAData
 
 
 
-@login_required
-def start_data_processing(request):
-    # Start data processing (in background if possible)
-    # For real production, use Celery instead of threading
+# @login_required
+def start_data_processing(request): 
     import threading
     thread = threading.Thread(target=fetch_cia_data_manually.fetch_and_process_cia_data)
     thread.daemon = True

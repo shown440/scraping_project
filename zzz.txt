@@ -1,0 +1,29 @@
+User Click:
+Clicking the "Refresh Data" button triggers a JavaScript event.
+
+Background Process Start:
+
+The button hides, and a "Processing..." spinner appears.
+
+A request is sent to Django's start_processing URL.
+
+Django launches a background thread to scrape/process CIA data without blocking the user.
+
+Data Processing:
+
+Scrapes the latest CIA data from the OIG website.
+
+Compares new data with the previous pull to detect additions/removals.
+
+Logs changes in the database (DataChange model).
+
+Auto-Refresh on Completion:
+
+JavaScript checks the dashboard every 3 seconds.
+
+When the "Latest Pull" timestamp updates, the page reloads automatically.
+
+The UI displays new changes (added/removed records).
+
+Key Flow:
+Click → Hide Button → Start Thread → Scrape → Compare → Save Changes → Detect Update → Reload Page
