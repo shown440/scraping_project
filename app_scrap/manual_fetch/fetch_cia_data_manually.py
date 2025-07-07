@@ -19,7 +19,6 @@ def parse_cia_data():
     base_url = "https://oig.hhs.gov/compliance/corporate-integrity-agreements/cia-documents.asp#"
     all_data = []
     
-    # Letters to process (A-Z)
     letters = [chr(i) for i in range(97, 123)]  # a to z
     
     my_var = 0
@@ -32,7 +31,6 @@ def parse_cia_data():
         if not cia_table:
             continue
             
-        # Process table rows
         for row in cia_table.find_all('tr'):
             # Skip header rows (those with <th> elements) and empty rows
             if row.find('th') or not row.find('td'):
@@ -86,14 +84,12 @@ def fetch_and_process_cia_data():
         current_pull = DataPull.objects.create()
         logger.info(f"Created DataPull ID: {current_pull.id}")
 
-        # Fetch and process data
         current_data = parse_cia_data()
         logger.info(f"Fetched {len(current_data)} records")
         
         current_hashes = set()
         change_count = 0
 
-        # Store current data
         for record in current_data:
             record_hash = generate_record_hash(record)
             current_hashes.add(record_hash)
@@ -103,7 +99,6 @@ def fetch_and_process_cia_data():
                 **record
             )
 
-        # Compare with previous pull
         previous_pull = DataPull.objects.filter(is_processed=True).order_by('-pull_time').first()
         
         if previous_pull:
@@ -140,7 +135,6 @@ def fetch_and_process_cia_data():
                 )
                 change_count += 1
 
-        # Mark pull as processed
         current_pull.is_processed = True
         current_pull.save()
 

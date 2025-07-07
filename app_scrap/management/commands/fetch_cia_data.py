@@ -81,17 +81,14 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         self.stdout.write("Starting CIA data fetch...")
         
-        # Create new data pull
         current_pull = DataPull.objects.create()
         self.stdout.write(f"Created new DataPull ID: {current_pull.id}")
         
-        # Fetch and process data
         current_data = parse_cia_data()
         self.stdout.write(f"Fetched {len(current_data)} records")
         
         current_hashes = set()
         
-        # Store current data
         for record in current_data:
             record_hash = generate_record_hash(record)
             current_hashes.add(record_hash)
@@ -102,7 +99,6 @@ class Command(BaseCommand):
                 **record
             )
         
-        # Compare with previous pull
         previous_pull = DataPull.objects.filter(is_processed=True).order_by('-pull_time').first()
         change_count = 0
         
@@ -149,7 +145,7 @@ class Command(BaseCommand):
         else:
             self.stdout.write("No previous pull found for comparison")
         
-        # Mark pull as processed
+        
         current_pull.is_processed = True
         current_pull.save()
         

@@ -1,12 +1,10 @@
+import string
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.db.models.expressions import F
 from django.core.validators import MaxValueValidator, MinValueValidator
-import string
 
-# import abstruct model
 from mixins.model_mixins.timestamp import TimeStampMixin 
-
 from scraping_project.settings import MEDIA_URL
 
 #  import project constant
